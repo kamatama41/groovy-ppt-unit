@@ -1,20 +1,26 @@
 class PPTPresentation {
     def slides = []
-    PPTPresentation(root) {
-        init(root)
-    }
-    PPTPresentation(PPTPresentation ppt) {
+    PPTPresentation(ppt) {
         init(ppt.slides)
     }
 
     def init (srcSlides) {
-        srcSlides.eachWithIndex { srcSlide, index ->
-            slides[index] = new Slide(title: srcSlide.title, text: srcSlide.text)
+        srcSlides.eachWithIndex { slide, slideIndex ->
+            slides[slideIndex] = new Slide()
+            slide.shapes.eachWithIndex {  shape, shapeIndex ->
+                slides[slideIndex].shapes[shapeIndex] = new Shape(text: shape.text)
+            }
+
         }
     }
 
     class Slide {
-        String title
+        def shapes = []
+        def getTitle () {
+            shapes[0].text
+        }
+    }
+    class Shape {
         String text
     }
 }

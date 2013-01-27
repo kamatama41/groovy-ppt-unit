@@ -1,4 +1,5 @@
-''' テストクラスを生成します
+Attribute VB_Name = "GroovyPPTModule"
+''' Generate Test Class
 Sub GenerateTest()
     Dim testName As String
     Dim testClassPath As String
@@ -8,14 +9,13 @@ Sub GenerateTest()
     testName = GetTestName(ActivePresentation.Name)
     testClassPath = ActivePresentation.Path & GetPathSeparator & testName & ".groovy"
 
-    ' ファイルの存在チェック
     If Dir(testClassPath) <> "" Then
-        MsgBox "既にテストクラスが存在しています"
+        MsgBox "Test class already Exists."
         Set myStm = Nothing
         Exit Sub
     End If
     
-    ' ファイルの書き出し
+    ' Wtire file as text
     preStm.Open
     preStm.Type = adTypeText
     preStm.Charset = "UTF-8"
@@ -33,7 +33,8 @@ Sub GenerateTest()
     preStm.WriteText "    " & "}", adWriteLine
     preStm.WriteText "}"
     
-    ' BOM無にするため、最初の3バイト分を飛ばして読む
+    ' non-BOM
+    ' @see http://d.hatena.ne.jp/replication/20091117/1258418243
     preStm.Position = 0
     preStm.Type = adTypeBinary
     preStm.Position = 3
@@ -49,21 +50,20 @@ Sub GenerateTest()
     Set mainStm = Nothing
 End Sub
 
-''' Groovyのユニットテストを実行します
+''' Run groovy test
 Sub RunTest()
     Dim testName As String
 
-    ' テストクラスとパラメタ用のjsonのパスを生成
     testName = GetTestName(ActivePresentation.Name)
 
-    ' jsonファイルを生成
+    ' Gererate json file
     WtiteJson testName
 
-    ' テスト実行
-    ExecuteTest testName
+    ' Execute test
+    ' ExecuteTest testName
 End Sub
 
-''' ファイル名から拡張子を取り除き、末尾に"Test"を付けて返します
+''' GetTestName
 Private Function GetTestName(fileName As String) As String
     Dim tmp As Variant
     tmp = Split(fileName, ".")
@@ -73,10 +73,9 @@ Private Function GetTestName(fileName As String) As String
 End Function
 
 
-''' スライドの内容をjson形式でファイルに書き込みます
+''' Write contents as JSON
 Private Function WtiteJson(testName As String)
     Dim jsonPath As String
-    Dim slideTitle As String
     Dim slideText As String
     Dim myStm As New ADODB.stream
     
@@ -85,16 +84,18 @@ Private Function WtiteJson(testName As String)
     myStm.Open
     myStm.Type = adTypeText
     myStm.Charset = "UTF-8"
-    myStm.WriteText "["
+    myStm.WriteText "{""slides"":["
     For Each Slide In ActivePresentation.Slides
-        slideTitle = Slide.Shapes.Placeholders(1).TextFrame.TextRange.text
-        slideTitle = Replace(slideTitle, vbCr, "")
-        slideText = Slide.Shapes.Placeholders(2).TextFrame.TextRange.text
-        slideText = Replace(slideText, vbCr, "")
-        ' 一つのslideのjsonを出力
-        myStm.WriteText "{""title"":""" & slideTitle & """, ""text"":""" & slideText & """},"
+        myStm.WriteText "{""shapes"":["
+        For Each Shape In Slide.Shapes
+            slideText = Shape.TextFrame.TextRange.text
+            slideText = Replace(slideText, vbCr, "")
+            ' Write slide contents as json
+            myStm.WriteText "{""text"":""" & slideText & """},"
+        Next Shape
+        myStm.WriteText "]},"
     Next Slide
-    myStm.WriteText "]"
+    myStm.WriteText "]}"
     
     
     myStm.SaveToFile fileName:=jsonPath, Options:=adSaveCreateOverWrite
@@ -104,12 +105,12 @@ Private Function WtiteJson(testName As String)
 End Function
 
 
-''' jsonのファイルパスを取得します
+''' Get json file path
 Private Function GetJsonFilePath(testName As String) As String
     GetJsonFilePath = ActivePresentation.Path & GetPathSeparator & testName & ".json"
 End Function
 
-''' Macでも動くようにするために書いたがMacでは動作未確認
+''' Processing branches by Mac and windows.
 Private Function GetPathSeparator() As String
     Dim pSeparator As String
     Dim os As String
@@ -122,14 +123,14 @@ Private Function GetPathSeparator() As String
     GetPathSeparator = pSeparator
 End Function
 
-''' Groovyのテストを実行します
+''' Execute groovy
 Private Function ExecuteTest(testName As String)
     Dim command As String
     Dim shell As Object
     Set shell = CreateObject("WScript.Shell")
     Dim rc As Integer
     
-    ' 現在のファイルパスまで移動して、テストスクリプト実行
+    ' Change directory and execute
     command = "%ComSpec% /c cd " & ActivePresentation.Path & _
                  " & groovy -c UTF-8 " & testName
                  

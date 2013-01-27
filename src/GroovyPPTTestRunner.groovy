@@ -15,7 +15,7 @@ class GroovyPPTTestRunner extends BlockJUnit4ClassRunner {
 
     def perseJson(className) {
         def parser = new JsonSlurper()
-        def text = new File(className + '.json').text
+        def text = new File("src/" + className + '.json').text
         def root = parser.parseText(text)
         new PPTPresentation(root)
     }
