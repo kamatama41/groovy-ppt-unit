@@ -1,5 +1,57 @@
 Attribute VB_Name = "GroovyPPTModule"
-Sub Execute()
+''' テストクラスを生成します
+Sub GenerateTest()
+    Dim testName As String
+    Dim testClassPath As String
+    Dim preStm As New ADODB.stream
+    Dim mainStm As New ADODB.stream
+    
+    testName = GetTestName(ActivePresentation.Name)
+    testClassPath = ActivePresentation.Path & GetPathSeparator & testName & ".groovy"
+
+    ' ファイルの存在チェック
+    If Dir(testClassPath) <> "" Then
+        MsgBox "既にテストクラスが存在しています"
+        Set myStm = Nothing
+        Exit Sub
+    End If
+    
+    ' ファイルの書き出し
+    preStm.Open
+    preStm.Type = adTypeText
+    preStm.Charset = "UTF-8"
+    
+    preStm.WriteText "import org.junit.runner.RunWith", adWriteLine
+    preStm.WriteText "import org.junit.Test", adWriteLine
+    preStm.WriteText "", adWriteLine
+    preStm.WriteText "@RunWith(GroovyPPTTestRunner)", adWriteLine
+    preStm.WriteText "class " & testName & " {", adWriteLine
+    preStm.WriteText "    " & "PPTPresentation presentation", adWriteLine
+    preStm.WriteText "", adWriteLine
+    preStm.WriteText "    " & "@Test", adWriteLine
+    preStm.WriteText "    " & "void testName() {", adWriteLine
+    preStm.WriteText "        " & "assert !'Not yet implemented'", adWriteLine
+    preStm.WriteText "    " & "}", adWriteLine
+    preStm.WriteText "}"
+    
+    ' BOM無にするため、最初の3バイト分を飛ばして読む
+    preStm.Position = 0
+    preStm.Type = adTypeBinary
+    preStm.Position = 3
+    Dim bin: bin = preStm.Read
+    preStm.Close
+    
+    mainStm.Type = adTypeBinary
+    mainStm.Open
+    mainStm.Write (bin)
+    mainStm.SaveToFile fileName:=testClassPath, Options:=adSaveCreateNotExist
+    
+    mainStm.Close
+    Set mainStm = Nothing
+End Sub
+
+''' Groovyのユニットテストを実行します
+Sub RunTest()
     Dim testName As String
 
     ' テストクラスとパラメタ用のjsonのパスを生成
@@ -24,8 +76,6 @@ End Function
 
 ''' スライドの内容をjson形式でファイルに書き込みます
 Private Function WtiteJson(testName As String)
-    Dim os As String
-    Dim pSeparator As String
     Dim jsonPath As String
     Dim slideTitle As String
     Dim slideText As String
@@ -57,13 +107,20 @@ End Function
 
 ''' jsonのファイルパスを取得します
 Private Function GetJsonFilePath(testName As String) As String
+    GetJsonFilePath = ActivePresentation.Path & GetPathSeparator & testName & ".json"
+End Function
+
+''' Macでも動くようにするために書いたがMacでは動作未確認
+Private Function GetPathSeparator() As String
+    Dim pSeparator As String
+    Dim os As String
     os = Application.OperatingSystem
     If InStr(os, "Windows") Then
         pSeparator = "\\"
     Else
         pSeparator = ":"
     End If
-    GetJsonFilePath = ActivePresentation.Path & pSeparator & testName & ".json"
+    GetPathSeparator = pSeparator
 End Function
 
 ''' Groovyのテストを実行します
