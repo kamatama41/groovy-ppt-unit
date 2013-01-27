@@ -25,7 +25,7 @@ Sub GenerateTest()
     preStm.WriteText "", adWriteLine
     preStm.WriteText "@RunWith(GroovyPPTTestRunner)", adWriteLine
     preStm.WriteText "class " & testName & " {", adWriteLine
-    preStm.WriteText "    " & "PPTPresentation presentation", adWriteLine
+    preStm.WriteText "    " & "PPTPresentation ppt", adWriteLine
     preStm.WriteText "", adWriteLine
     preStm.WriteText "    " & "@Test", adWriteLine
     preStm.WriteText "    " & "void testName() {", adWriteLine
