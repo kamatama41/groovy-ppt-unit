@@ -32,7 +32,7 @@ class GroovyPPTTestRunner extends BlockJUnit4ClassRunner {
     private class InnerInvoker extends InvokeMethod {
         InnerInvoker(FrameworkMethod testMethod, Object target) {
             super(testMethod, target);
-            target.presentation = new PPTPresentation(ppt)
+            target.ppt = new PPTPresentation(ppt)
         }
         @Override
         public void evaluate() throws Throwable {
