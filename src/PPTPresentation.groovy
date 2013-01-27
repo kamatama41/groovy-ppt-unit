@@ -1,3 +1,6 @@
+/**
+ * Power Pointのプレゼンテーションファイルのデータを保持します
+ */
 class PPTPresentation {
     def slides = []
     PPTPresentation(ppt) {
@@ -10,7 +13,6 @@ class PPTPresentation {
             slide.shapes.eachWithIndex {  shape, shapeIndex ->
                 slides[slideIndex].shapes[shapeIndex] = new Shape(text: shape.text)
             }
-
         }
     }
 
@@ -20,6 +22,7 @@ class PPTPresentation {
             shapes[0].text
         }
     }
+
     class Shape {
         String text
     }

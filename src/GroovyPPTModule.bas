@@ -60,7 +60,7 @@ Sub RunTest()
     WtiteJson testName
 
     ' Execute test
-    ' ExecuteTest testName
+    ExecuteTest testName
 End Sub
 
 ''' GetTestName
@@ -81,6 +81,8 @@ Private Function WtiteJson(testName As String)
     
     jsonPath = GetJsonFilePath(testName)
 
+    ' @see http://msdn.microsoft.com/ja-jp/library
+    '      /microsoft.office.interop.excel.shape_properties(v=office.11).aspx
     myStm.Open
     myStm.Type = adTypeText
     myStm.Charset = "UTF-8"

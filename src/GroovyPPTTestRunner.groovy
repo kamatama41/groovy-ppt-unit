@@ -5,6 +5,10 @@ import org.junit.runners.model.FrameworkMethod
 import org.junit.runners.model.InitializationError
 import org.junit.runners.model.Statement
 
+/**
+ * JSONファイルを読み込んで、テスト対象クラスに
+ * インジェクションする{@Runner}実装です。
+ */
 class GroovyPPTTestRunner extends BlockJUnit4ClassRunner {
     PPTPresentation ppt
 
@@ -13,9 +17,9 @@ class GroovyPPTTestRunner extends BlockJUnit4ClassRunner {
         ppt = perseJson(klass.name)
     }
 
-    def perseJson(className) {
+    static def perseJson(className) {
         def parser = new JsonSlurper()
-        def text = new File("src/" + className + '.json').text
+        def text = new File(className + '.json').text
         def root = parser.parseText(text)
         new PPTPresentation(root)
     }
