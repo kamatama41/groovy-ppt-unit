@@ -1,6 +1,4 @@
-<<<<<<< HEAD
-Attribute VB_Name = "GroovyPPTModule"
-''' ƒeƒXƒgƒNƒ‰ƒX‚ð¶¬‚µ‚Ü‚·
+''' ãƒ†ã‚¹ãƒˆã‚¯ãƒ©ã‚¹ã‚’ç”Ÿæˆã—ã¾ã™
 Sub GenerateTest()
     Dim testName As String
     Dim testClassPath As String
@@ -10,14 +8,14 @@ Sub GenerateTest()
     testName = GetTestName(ActivePresentation.Name)
     testClassPath = ActivePresentation.Path & GetPathSeparator & testName & ".groovy"
 
-    ' ƒtƒ@ƒCƒ‹‚Ì‘¶Ýƒ`ƒFƒbƒN
+    ' ãƒ•ã‚¡ã‚¤ãƒ«ã®å­˜åœ¨ãƒã‚§ãƒƒã‚¯
     If Dir(testClassPath) <> "" Then
-        MsgBox "Šù‚ÉƒeƒXƒgƒNƒ‰ƒX‚ª‘¶Ý‚µ‚Ä‚¢‚Ü‚·"
+        MsgBox "æ—¢ã«ãƒ†ã‚¹ãƒˆã‚¯ãƒ©ã‚¹ãŒå­˜åœ¨ã—ã¦ã„ã¾ã™"
         Set myStm = Nothing
         Exit Sub
     End If
     
-    ' ƒtƒ@ƒCƒ‹‚Ì‘‚«o‚µ
+    ' ãƒ•ã‚¡ã‚¤ãƒ«ã®æ›¸ãå‡ºã—
     preStm.Open
     preStm.Type = adTypeText
     preStm.Charset = "UTF-8"
@@ -35,7 +33,7 @@ Sub GenerateTest()
     preStm.WriteText "    " & "}", adWriteLine
     preStm.WriteText "}"
     
-    ' BOM–³‚É‚·‚é‚½‚ßAÅ‰‚Ì3ƒoƒCƒg•ª‚ð”ò‚Î‚µ‚Ä“Ç‚Þ
+    ' BOMç„¡ã«ã™ã‚‹ãŸã‚ã€æœ€åˆã®3ãƒã‚¤ãƒˆåˆ†ã‚’é£›ã°ã—ã¦èª­ã‚€
     preStm.Position = 0
     preStm.Type = adTypeBinary
     preStm.Position = 3
@@ -51,23 +49,8 @@ Sub GenerateTest()
     Set mainStm = Nothing
 End Sub
 
-''' Groovy‚Ìƒ†ƒjƒbƒgƒeƒXƒg‚ðŽÀs‚µ‚Ü‚·
+''' Groovyã®ãƒ¦ãƒ‹ãƒƒãƒˆãƒ†ã‚¹ãƒˆã‚’å®Ÿè¡Œã—ã¾ã™
 Sub RunTest()
-    Dim testName As String
-
-    ' ƒeƒXƒgƒNƒ‰ƒX‚Æƒpƒ‰ƒƒ^—p‚Ìjson‚ÌƒpƒX‚ð¶¬
-    testName = GetTestName(ActivePresentation.Name)
-
-    ' jsonƒtƒ@ƒCƒ‹‚ð¶¬
-    WtiteJson testName
-
-    ' ƒeƒXƒgŽÀs
-    ExecuteTest testName
-End Sub
-
-''' ƒtƒ@ƒCƒ‹–¼‚©‚çŠg’£Žq‚ðŽæ‚èœ‚«A––”ö‚É"Test"‚ð•t‚¯‚Ä•Ô‚µ‚Ü‚·
-=======
-Sub Execute()
     Dim testName As String
 
     ' ãƒ†ã‚¹ãƒˆã‚¯ãƒ©ã‚¹ã¨ãƒ‘ãƒ©ãƒ¡ã‚¿ç”¨ã®jsonã®ãƒ‘ã‚¹ã‚’ç”Ÿæˆ
@@ -81,7 +64,6 @@ Sub Execute()
 End Sub
 
 ''' ãƒ•ã‚¡ã‚¤ãƒ«åã‹ã‚‰æ‹¡å¼µå­ã‚’å–ã‚Šé™¤ãã€æœ«å°¾ã«"Test"ã‚’ä»˜ã‘ã¦è¿”ã—ã¾ã™
->>>>>>> origin/master
 Private Function GetTestName(fileName As String) As String
     Dim tmp As Variant
     tmp = Split(fileName, ".")
@@ -91,15 +73,8 @@ Private Function GetTestName(fileName As String) As String
 End Function
 
 
-<<<<<<< HEAD
-''' ƒXƒ‰ƒCƒh‚Ì“à—e‚ðjsonŒ`Ž®‚Åƒtƒ@ƒCƒ‹‚É‘‚«ž‚Ý‚Ü‚·
-Private Function WtiteJson(testName As String)
-=======
 ''' ã‚¹ãƒ©ã‚¤ãƒ‰ã®å†…å®¹ã‚’jsonå½¢å¼ã§ãƒ•ã‚¡ã‚¤ãƒ«ã«æ›¸ãè¾¼ã¿ã¾ã™
 Private Function WtiteJson(testName As String)
-    Dim os As String
-    Dim pSeparator As String
->>>>>>> origin/master
     Dim jsonPath As String
     Dim slideTitle As String
     Dim slideText As String
@@ -116,11 +91,7 @@ Private Function WtiteJson(testName As String)
         slideTitle = Replace(slideTitle, vbCr, "")
         slideText = Slide.Shapes.Placeholders(2).TextFrame.TextRange.text
         slideText = Replace(slideText, vbCr, "")
-<<<<<<< HEAD
-        ' ˆê‚Â‚Ìslide‚Ìjson‚ðo—Í
-=======
         ' ä¸€ã¤ã®slideã®jsonã‚’å‡ºåŠ›
->>>>>>> origin/master
         myStm.WriteText "{""title"":""" & slideTitle & """, ""text"":""" & slideText & """},"
     Next Slide
     myStm.WriteText "]"
@@ -133,48 +104,32 @@ Private Function WtiteJson(testName As String)
 End Function
 
 
-<<<<<<< HEAD
-''' json‚Ìƒtƒ@ƒCƒ‹ƒpƒX‚ðŽæ“¾‚µ‚Ü‚·
+''' jsonã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’å–å¾—ã—ã¾ã™
 Private Function GetJsonFilePath(testName As String) As String
     GetJsonFilePath = ActivePresentation.Path & GetPathSeparator & testName & ".json"
 End Function
 
-''' Mac‚Å‚à“®‚­‚æ‚¤‚É‚·‚é‚½‚ß‚É‘‚¢‚½‚ªMac‚Å‚Í“®ì–¢Šm”F
+''' Macã§ã‚‚å‹•ãã‚ˆã†ã«ã™ã‚‹ãŸã‚ã«æ›¸ã„ãŸãŒMacã§ã¯å‹•ä½œæœªç¢ºèª
 Private Function GetPathSeparator() As String
     Dim pSeparator As String
     Dim os As String
-=======
-''' jsonã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’å–å¾—ã—ã¾ã™
-Private Function GetJsonFilePath(testName As String) As String
->>>>>>> origin/master
     os = Application.OperatingSystem
     If InStr(os, "Windows") Then
         pSeparator = "\\"
     Else
         pSeparator = ":"
     End If
-<<<<<<< HEAD
     GetPathSeparator = pSeparator
 End Function
 
-''' Groovy‚ÌƒeƒXƒg‚ðŽÀs‚µ‚Ü‚·
-=======
-    GetJsonFilePath = ActivePresentation.Path & pSeparator & testName & ".json"
-End Function
-
 ''' Groovyã®ãƒ†ã‚¹ãƒˆã‚’å®Ÿè¡Œã—ã¾ã™
->>>>>>> origin/master
 Private Function ExecuteTest(testName As String)
     Dim command As String
     Dim shell As Object
     Set shell = CreateObject("WScript.Shell")
     Dim rc As Integer
     
-<<<<<<< HEAD
-    ' Œ»Ý‚Ìƒtƒ@ƒCƒ‹ƒpƒX‚Ü‚ÅˆÚ“®‚µ‚ÄAƒeƒXƒgƒXƒNƒŠƒvƒgŽÀs
-=======
     ' ç¾åœ¨ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã¾ã§ç§»å‹•ã—ã¦ã€ãƒ†ã‚¹ãƒˆã‚¹ã‚¯ãƒªãƒ—ãƒˆå®Ÿè¡Œ
->>>>>>> origin/master
     command = "%ComSpec% /c cd " & ActivePresentation.Path & _
                  " & groovy -c UTF-8 " & testName
                  
